@@ -12,15 +12,13 @@ x = data.iloc[:, 1:-1]
 y = data['Label']
 
 model = tf.keras.Sequential([
-    tf.keras.Input(shape=(1,), name="my_input"),
+    tf.keras.Input(shape=(x.shape[1],), name="my_input"),
     tf.keras.layers.Dense(1, activation="sigmoid", name="my_dense"),
 ], name="my_sequential")
-model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-model.fit(x,y)
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["mae"])
+model.fit(x, y, epochs=40, batch_size=32, validation_split=0.2)
 
-preds = model.predict(x)
-print(preds)
+preds = (model.predict(x) > 0.5).astype(int)
+correct = (y == preds.flatten())
 
-correct = y == preds
-
-print("Accuracy", np.average(correct))
+print("Accuracy:", np.mean(correct))
