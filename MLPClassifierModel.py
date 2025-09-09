@@ -6,7 +6,7 @@ import pandas as pd
 import pickle
 
 # Model Creation
-from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
@@ -17,7 +17,7 @@ y = data['Label']
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-model = LogisticRegression(penalty='l2', max_iter=500, solver='newton-cg')
+model = MLPClassifier(activation='tanh', max_iter=500)
 model.fit(x_train,y_train)
 
 preds = model.predict(x_test)
@@ -25,6 +25,6 @@ preds = model.predict(x_test)
 accuracy = accuracy_score(y_test, preds)
 print(f"Accuracy: {accuracy}")
 
-filename = 'logisticModel.pkl'
+filename = 'mlpModel.pkl'
 with open(filename, 'wb') as file:
     pickle.dump(model, file)
