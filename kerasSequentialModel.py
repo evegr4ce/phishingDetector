@@ -14,11 +14,11 @@ x = data.iloc[:, 1:-1]
 y = data['Label']
 
 model = tf.keras.Sequential([
-    tf.keras.Input(shape=(x.shape[1],), name="my_input"),
-    tf.keras.layers.Dense(1, activation="sigmoid", name="my_dense"),
-], name="my_sequential")
+    tf.keras.Input(shape=(x.shape[1],), name="inputs"),
+    tf.keras.layers.Dense(1, activation="sigmoid", name="denseLayer"),
+], name="sequentialModel")
 model.compile(optimizer=RMSprop(learning_rate=0.001), loss="binary_crossentropy", metrics=["accuracy"])
-model.fit(x, y, epochs=40, batch_size=32, validation_split=0.2)
+model.fit(x, y, epochs=100, batch_size=32, validation_split=0.2)
 
 preds = (model.predict(x) > 0.5).astype(int)
 correct = (y == preds.flatten())
