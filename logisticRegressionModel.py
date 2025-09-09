@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 
@@ -14,7 +15,6 @@ model = LogisticRegression(penalty='l2', max_iter=500, solver='newton-cg')
 model.fit(x,y)
 
 preds = model.predict(x)
-print(preds)
 
 correct = y == preds
 
