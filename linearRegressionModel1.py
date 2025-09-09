@@ -19,3 +19,7 @@ print(preds)
 correct = y == preds
 
 print("Accuracy", np.average(correct))
+
+filename = 'logisticModel.pkl'
+with open(filename, 'wb') as file:
+    pickle.dump(model, file)

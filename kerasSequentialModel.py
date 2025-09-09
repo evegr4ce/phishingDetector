@@ -2,6 +2,7 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import pickle
 from keras.models import Sequential
 from keras.layers import Dense
 import matplotlib.pyplot as plt
@@ -22,3 +23,7 @@ preds = (model.predict(x) > 0.5).astype(int)
 correct = (y == preds.flatten())
 
 print("Accuracy:", np.mean(correct))
+
+filename = 'sequentialModel.pkl'
+with open(filename, 'wb') as file:
+    pickle.dump(model, file)
