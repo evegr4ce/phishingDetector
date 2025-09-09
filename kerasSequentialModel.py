@@ -1,5 +1,5 @@
 # Keras Seuential Model -> Sept 8th, 2025
-
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 from keras.models import Sequential
@@ -11,9 +11,9 @@ data = pd.read_csv('./DataFiles/urldata.csv')
 x = data.iloc[:, 1:-1]
 y = data['Label']
 
-model = keras.Sequential([
-    keras.Input(shape=(1,), name="my_input"),
-    keras.layers.Dense(1, activation="sigmoid", name="my_dense"),
+model = tf.keras.Sequential([
+    tf.keras.Input(shape=(1,), name="my_input"),
+    tf.keras.layers.Dense(1, activation="sigmoid", name="my_dense"),
 ], name="my_sequential")
 model.compile(optimizer="adam", loss="mse", metrics=["mae"])
 model.fit(x,y)
