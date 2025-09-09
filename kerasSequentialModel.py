@@ -2,6 +2,7 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+from keras.optimizers import RMSprop
 import pickle
 from keras.models import Sequential
 from keras.layers import Dense
@@ -16,7 +17,7 @@ model = tf.keras.Sequential([
     tf.keras.Input(shape=(x.shape[1],), name="my_input"),
     tf.keras.layers.Dense(1, activation="sigmoid", name="my_dense"),
 ], name="my_sequential")
-model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["mae"])
+model.compile(optimizer=RMSprop(learning_rate=0.001), loss="binary_crossentropy", metrics=["accuracy"])
 model.fit(x, y, epochs=40, batch_size=32, validation_split=0.2)
 
 preds = (model.predict(x) > 0.5).astype(int)
