@@ -1,6 +1,7 @@
 import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
+import urlExtraction
 
 root = tk.Tk()
 
@@ -14,9 +15,8 @@ def fetch_data():
 
     if url:
         response = requests.get(url)
-        if response.status_code == 200:# checking the satus code
-            soup = BeautifulSoup(response.text, 'html.parser')#parsing the url
-            extracted_data = soup.get_text()#extract the data
+        if response.status_code == 200:# checking the status code
+            extracted_data = getFeatures(url)#extract the data
             display_data(extracted_data)#display the data
         else:
             display_data("Error: unable to get data")
