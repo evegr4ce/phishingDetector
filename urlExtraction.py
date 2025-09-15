@@ -1,5 +1,6 @@
 # URL Feature Extraction -> Sept. 9th
-
+#tqdm
+import csv
 import pandas as pd
 from urllib.parse import urlparse, urlencode
 import ipaddress
@@ -177,22 +178,24 @@ def mainScraping():
     randLegit = randLegit.reset_index(drop=True)
     randPhish = phishLegit.reset_index(drop=True)
 
-    legitFeat = []
-    label = 0
-    for i in range(10000):
-        legitFeat.append(featureExtraction(randLegit["url"][i], label))
-        time.sleep(1)
+    csv_filename = "urldata.csv"
+    with open(csv_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
 
-    legitimate = pd.DataFrame(legitFeat, columns=feature_names)
+        label = 0
+        for i in range(10000):
+            writer.writerow(featureExtraction(randLegit["url"][i], label))
+            time.sleep(1)
 
-    phishFeat = []
-    label = 1
-    for i in range(10000):
-        phishFeat.append(featureExtraction(randPhish["url"][i], label))
-        time.sleep(1)
+        legitimate = pd.DataFrame(legitFeat, columns=feature_names)
 
-    phishing = pd.DataFrame(phishFeat, columns=feature_names)
+        label = 1
+        for i in range(10000):
+            writer.writerow(featureExtraction(randLegit["url"][i], label))
+            time.sleep(1)
 
-    urldata = pd.concat([legitimate, phishing]).reset_index(drop=True)
+        phishing = pd.DataFrame(phishFeat, columns=feature_names)
 
-    urldata.to_csv('urldata.csv', index=False)
+        urldata = pd.concat([legitimate, phishing]).reset_index(drop=True)
+
+mainScraping()
