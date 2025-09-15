@@ -10,12 +10,12 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-data = pd.read_csv('./DataFiles/urldata.csv')
+data = pd.read_csv('./DataFiles/urldata0.csv')
 
 x = data.iloc[:, 1:-2]
 y = data['Label']
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.99, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=42, shuffle=True)
 
 model = MLPClassifier(activation='tanh', max_iter=10000)
 model.fit(x_train,y_train)

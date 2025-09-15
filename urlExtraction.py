@@ -175,12 +175,12 @@ def mainScraping():
     phishLegit = phish.sample(n = 10000, random_state = 1234).copy()
 
     randLegit = randLegit.reset_index(drop=True)
-    phishLegit = phishLegit.reset_index(drop=True)
+    randPhish = phishLegit.reset_index(drop=True)
 
     legitFeat = []
     label = 0
     for i in range(10000):
-        legitFeat.append(featureExtraction(legit["url"][i], label))
+        legitFeat.append(featureExtraction(randLegit["url"][i], label))
         time.sleep(1)
 
     legitimate = pd.DataFrame(legitFeat, columns=feature_names)
@@ -188,7 +188,7 @@ def mainScraping():
     phishFeat = []
     label = 1
     for i in range(10000):
-        phishFeat.append(featureExtraction(phish["url"][i], label))
+        phishFeat.append(featureExtraction(randPhish["url"][i], label))
         time.sleep(1)
 
     phishing = pd.DataFrame(phishFeat, columns=feature_names)
