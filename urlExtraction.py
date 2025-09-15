@@ -11,6 +11,7 @@ import urllib.request
 import re
 from datetime import datetime
 import time
+from tqdm import tqdm
 
 # important features: @ symbols, length of url, depth (amt of /), redirection, https certificate, url shorteners, unusual symbols, # of periods
 # LIVE SCRAPING: DNS history, ip address, web traffic, DNS age, DNS expiration, page text
@@ -172,8 +173,8 @@ def mainScraping():
 
     legit.columns = ["url"]
 
-    randLegit = legit.sample(n = 10000, random_state = 1234).copy()
-    phishLegit = phish.sample(n = 10000, random_state = 1234).copy()
+    randLegit = legit.sample(n = 5000, random_state = 1234).copy()
+    phishLegit = phish.sample(n = 5000, random_state = 1234).copy()
 
     randLegit = randLegit.reset_index(drop=True)
     randPhish = phishLegit.reset_index(drop=True)
@@ -181,21 +182,12 @@ def mainScraping():
     csv_filename = "urldata.csv"
     with open(csv_filename, mode='w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(feature_names)
 
-        label = 0
-        for i in range(10000):
-            writer.writerow(featureExtraction(randLegit["url"][i], label))
+        for i in tqdm(range(10000)):
+            writer.writerow(featureExtraction(randLegit["url"][i], 0))
             time.sleep(1)
-
-        legitimate = pd.DataFrame(legitFeat, columns=feature_names)
-
-        label = 1
-        for i in range(10000):
-            writer.writerow(featureExtraction(randLegit["url"][i], label))
+            writer.writerow(featureExtraction(randPhish["url"][i], 1))
             time.sleep(1)
-
-        phishing = pd.DataFrame(phishFeat, columns=feature_names)
-
-        urldata = pd.concat([legitimate, phishing]).reset_index(drop=True)
 
 mainScraping()
