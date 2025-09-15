@@ -12,12 +12,12 @@ from sklearn.metrics import accuracy_score
 
 data = pd.read_csv('./DataFiles/urldata.csv')
 
-x = data.iloc[:, 1:-1]
+x = data.iloc[:, 1:-2]
 y = data['Label']
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.99, random_state=42)
 
-model = MLPClassifier(activation='tanh', max_iter=500)
+model = MLPClassifier(activation='tanh', max_iter=10000)
 model.fit(x_train,y_train)
 
 preds = model.predict(x_test)

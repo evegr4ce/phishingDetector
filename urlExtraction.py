@@ -130,7 +130,7 @@ def pageText(url):
     except:
         return 0
 
-def featureExtraction(url, label):
+def featureExtraction(url, label=0):
 
   features = []
 
@@ -160,6 +160,7 @@ def featureExtraction(url, label):
 
   return features
 
+# DO NOT RUN / MAIN TRAINING DATA LOOP
 def mainScraping():
     feature_names = ['URL', 'HasAt', 'URLLen', 'URLDepth', 'Redirection', 'domainType', 'ShortURL',
                       'OddChar', 'numPer', 'HasIP', 'Web_Traffic', 'DomainAge', 'Text',
@@ -195,5 +196,3 @@ def mainScraping():
     urldata = pd.concat([legitimate, phishing]).reset_index(drop=True)
 
     urldata.to_csv('urldata.csv', index=False)
-
-mainScraping()
