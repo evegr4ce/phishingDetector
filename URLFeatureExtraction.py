@@ -372,7 +372,7 @@ def featureExtraction(url):
       features.append(web_traffic(url))
   except:
       features.append(0)
-      
+
   features.append(1 if dns == 1 else domainAge(domain_name))
   features.append(1 if dns == 1 else domainEnd(domain_name))
 

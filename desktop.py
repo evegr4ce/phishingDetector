@@ -16,13 +16,14 @@ root.title("Phishing detector")
 def fetch_data():
     url = url_entry.get()
 
-    feature_names = ["Domain","Have_IP","Have_At","URL_Length","URL_Depth","Redirection","https_Domain","TinyURL","Prefix/Suffix",
-        "DNS_Record","Web_Traffic","Domain_Age","Domain_End","iFrame","Mouse_Over","Right_Click","Web_Forwards","Label"]
+    feature_names = ['URL', 'HasAt', 'URLLen', 'URLDepth', 'Redirection', 'domainType', 'ShortURL',
+                      'OddChar', 'Prefix/Suffix', 'numPer', 'HasIP', 'Web_Traffic', 'DomainAge',
+                      'Text', 'iFrame', 'mouseOver', 'rightClick', 'Forwarding', 'Label']
 
     if url:
         # response = requests.get(url)
         # if response.status_code == 200:# checking the status code
-        extracted_data = URLFeatureExtraction.featureExtraction(url)#extract the data
+        extracted_data = urlExtraction.featureExtraction(url)#extract the data
         data = {name:ft for name,ft in zip(feature_names, extracted_data)}
         features = pd.DataFrame(data, columns=feature_names, index=[0])
         x = features.iloc[:, 1:-2]

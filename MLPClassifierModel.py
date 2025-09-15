@@ -10,7 +10,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-data = pd.read_csv('./DataFiles/urldata0.csv')
+data = pd.read_csv('urldata.csv')
 
 x = data.iloc[:, 1:-2]
 y = data['Label']

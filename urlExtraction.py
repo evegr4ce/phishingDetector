@@ -2,6 +2,7 @@
 #tqdm
 import csv
 import pandas as pd
+import numpy as np
 from urllib.parse import urlparse, urlencode
 import ipaddress
 from bs4 import BeautifulSoup
@@ -24,7 +25,11 @@ def hasAt(url):
     return 0
 
 def getLen(url):
-    return len(url)
+    if len(url) < 54:
+      length = 0
+    else:
+      length = 1
+    return length
 
 def getDepth(url):
     depth = 0
@@ -69,8 +74,17 @@ def oddCharacters(url):
 
     return count
 
+def prefixSuffix(url):
+    if '-' in urlparse(url).netloc:
+        return 1
+    else:
+        return 0
+
 def numPeriods(url):
-    return url.count('.')
+    if url.count('.') > 3:
+        return 1
+    else:
+        return 0
 
 # live scraping
 
@@ -116,21 +130,49 @@ def domainAge(domain_name):
       age = 0
   return age
 
-def pageText(url):
-    try:
-        url = url_entry.get()
+# def pageText(url):
+#     try:
+#         soup = BeautifulSoup(url.text, 'html.parser')
+#         extracted_data = soup.get_text()
+#         return str(extracted_data)
+#     except:
+#         return 0
 
-        if url:
-            response = requests.get(url)
+def iframe(response):
+  if response == "":
+      return 1
+  else:
+      if re.findall(r"[<iframe>|<frameBorder>]", response.text):
+          return 0
+      else:
+          return 1
 
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                extracted_data = soup.get_text()
-                return str(extracted_data)
-        else:
-            return 0
-    except:
-        return 0
+def mouseOver(response):
+  if response == "" :
+    return 1
+  else:
+    if re.findall("<script>.+onmouseover.+</script>", response.text):
+      return 1
+    else:
+      return 0
+
+def rightClick(response):
+  if response == "":
+    return 1
+  else:
+    if re.findall(r"event.button ?== ?2", response.text):
+      return 0
+    else:
+      return 1
+
+def forwarding(response):
+  if response == "":
+    return 1
+  else:
+    if len(response.history) <= 2:
+      return 0
+    else:
+      return 1
 
 def featureExtraction(url, label=0):
 
@@ -145,6 +187,7 @@ def featureExtraction(url, label=0):
   features.append(checkDomain(url))
   features.append(checkShort(url))
   features.append(oddCharacters(url))
+  features.append(prefixSuffix(url))
   features.append(numPeriods(url))
 
   # live scraping
@@ -157,7 +200,17 @@ def featureExtraction(url, label=0):
   features.append(hasIP(url))
   features.append(hasTraffic(url))
   features.append(1 if dns == 1 else domainAge(domain_name))
-  features.append(pageText(url))
+  # features.append(pageText(url))
+
+  try:
+    response = requests.get(url)
+  except:
+    response = ""
+
+  features.append(iframe(response))
+  features.append(mouseOver(response))
+  features.append(0 if np.isnan(rightClick(response)) else rightClick(response))
+  features.append(forwarding(response))
   features.append(label)
 
   return features
@@ -165,8 +218,8 @@ def featureExtraction(url, label=0):
 # DO NOT RUN / MAIN TRAINING DATA LOOP
 def mainScraping():
     feature_names = ['URL', 'HasAt', 'URLLen', 'URLDepth', 'Redirection', 'domainType', 'ShortURL',
-                      'OddChar', 'numPer', 'HasIP', 'Web_Traffic', 'DomainAge', 'Text',
-                      'Label']
+                      'OddChar', 'Prefix/Suffix', 'numPer', 'HasIP', 'Web_Traffic', 'DomainAge',
+                      'iFrame', 'mouseOver', 'rightClick', 'Forwarding', 'Label']
 
     legit = pd.read_csv("./DataFiles/benign_list.csv")
     phish = pd.read_csv("./DataFiles/online-valid.csv")
@@ -180,14 +233,12 @@ def mainScraping():
     randPhish = phishLegit.reset_index(drop=True)
 
     csv_filename = "urldata.csv"
-    with open(csv_filename, mode='w', newline='') as file:
+    with open(csv_filename, mode='w', newline='', encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(feature_names)
 
-        for i in tqdm(range(10000)):
+        for i in tqdm(range(5000)):
             writer.writerow(featureExtraction(randLegit["url"][i], 0))
             time.sleep(1)
             writer.writerow(featureExtraction(randPhish["url"][i], 1))
             time.sleep(1)
-
-mainScraping()
