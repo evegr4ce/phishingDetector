@@ -34,8 +34,11 @@ def fetch_data():
             model = pickle.load(f)
 
         prediction = model.predict(x)
-        print(prediction[0])
         display_data(prediction[0])
+        if prediction[0] == 0:
+            display_data('This is likely a safe URL! Browse with caution')
+        else: 
+            display_data("We have detected a Phishing URL, if you would like to report this website, please do so on ic3.gov")
 
         # else:
         #     display_data("Error: unable to get data")
