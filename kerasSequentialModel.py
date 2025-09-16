@@ -10,18 +10,25 @@ import tensorflow as tf
 from keras.optimizers import RMSprop
 from keras.optimizers import Nadam
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Embedding, Flatten, Dense
 
-data = pd.read_csv('./DataFiles/urldata.csv')
+data = pd.read_csv('urldata.csv')
 
 x = data.iloc[:, 1:-1] # select all columns except for the first & last
 y = data['Label'] # target column
 
 # sequential model
-model = tf.keras.Sequential([
-    tf.keras.Input(shape=(x.shape[1],), name="inputs"),
-    tf.keras.layers.Dense(1, activation="sigmoid", name="denseLayer"),
-], name="sequentialModel")
+vocab_size = 10000  # Expected by the model
+embedding_dim = 16  # Received by the model
+
+model = Sequential([
+    Embedding(vocab_size, embedding_dim),
+    Flatten(),
+    Dense(128, activation='relu', input_shape=(len(y),)),
+    Dense(128, activation='relu'),
+    Dense(1, activation='sigmoid') # Single output neuron with sigmoid activation
+])
+
 model.compile(optimizer=Nadam(), loss="binary_crossentropy", metrics=["accuracy"])
 model.fit(x, y, epochs=100, batch_size=32, validation_split=0.2)
 

@@ -13,9 +13,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.pipeline import make_pipeline
 
-data = pd.read_csv('./DataFiles/urldata0.csv')
+data = pd.read_csv('urldata.csv')
 
-x = data.iloc[:, 1:-2]
+x = data.iloc[:, 1:-1]
 y = data['Label']
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=42, shuffle=True)

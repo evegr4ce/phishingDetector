@@ -18,7 +18,7 @@ def fetch_data():
 
     feature_names = ['URL', 'HasAt', 'URLLen', 'URLDepth', 'Redirection', 'domainType', 'ShortURL',
                       'OddChar', 'Prefix/Suffix', 'numPer', 'HasIP', 'Web_Traffic', 'DomainAge',
-                      'Text', 'iFrame', 'mouseOver', 'rightClick', 'Forwarding', 'Label']
+                      'iFrame', 'mouseOver', 'rightClick', 'Forwarding', 'Label']
 
     if url:
         # response = requests.get(url)
@@ -26,7 +26,7 @@ def fetch_data():
         extracted_data = urlExtraction.featureExtraction(url)#extract the data
         data = {name:ft for name,ft in zip(feature_names, extracted_data)}
         features = pd.DataFrame(data, columns=feature_names, index=[0])
-        x = features.iloc[:, 1:-2]
+        x = features.iloc[:, 1:-1]
         print(x)
         x = x.reset_index(drop=True)
 
@@ -37,7 +37,7 @@ def fetch_data():
         display_data(prediction[0])
         if prediction[0] == 0:
             display_data('This is likely a safe URL! Browse with caution')
-        else: 
+        else:
             display_data("We have detected a Phishing URL, if you would like to report this website, please do so on ic3.gov")
 
         # else:
