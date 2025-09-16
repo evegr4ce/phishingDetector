@@ -130,14 +130,6 @@ def domainAge(domain_name):
       age = 0
   return age
 
-# def pageText(url):
-#     try:
-#         soup = BeautifulSoup(url.text, 'html.parser')
-#         extracted_data = soup.get_text()
-#         return str(extracted_data)
-#     except:
-#         return 0
-
 def iframe(response):
   if response == "":
       return 1
@@ -242,3 +234,5 @@ def mainScraping():
             time.sleep(1)
             writer.writerow(featureExtraction(randPhish["url"][i], 1))
             time.sleep(1)
+
+# mainScraping()
