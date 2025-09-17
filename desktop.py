@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import urlExtraction
 import pickle
 import pandas as pd
+import time
 import URLFeatureExtraction
 
 root = tk.Tk()
@@ -21,6 +22,10 @@ def fetch_data():
                       'iFrame', 'mouseOver', 'rightClick', 'Forwarding', 'Label']
 
     if url:
+
+        time.sleep(2)
+
+        headers = {"user-Agent: PhishingDetector/1.0(Education use only; contact: marykatelaibhen@gmail.com) "}
         # response = requests.get(url)
         # if response.status_code == 200:# checking the status code
         extracted_data = urlExtraction.featureExtraction(url)#extract the data
